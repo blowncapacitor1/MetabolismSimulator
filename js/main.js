@@ -1,6 +1,6 @@
 //import { initGlycolysis } from './glycolysis.js';
 //import { initPCR } from './pcr.js';
-import { cellState, updateDashboard } from './js/state.js';
+import { cellState, updateDashboard } from 'js/state.js';
 //import { initTCA } from './tca.js';
 import { initETC } from './electrontransportchain.js';
 window.addEventListener('DOMContentLoaded', () => {
