@@ -2,7 +2,7 @@
 //import { initPCR } from './pcr.js';
 import { cellState, updateDashboard } from './js/state.js';
 //import { initTCA } from './tca.js';
-import { initETC } from './electrontransportchain.js';
+import { initETC } from './js/electrontransportchain.js';
 window.addEventListener('DOMContentLoaded', () => {
   const svgObject = document.getElementById('svg-object');
 
