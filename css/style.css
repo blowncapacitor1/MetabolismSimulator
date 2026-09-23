@@ -1,0 +1,143 @@
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+object {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1; /* Keep SVG behind interactive UI */
+}
+
+/* Pin button container strictly to top-right */
+.controls {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  left: auto; /* Override any inherited or default left alignment */
+  z-index: 100;
+}
+
+button {
+  padding: 10px 16px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/*Position table on top-left, shifted down 
+.molecule-dashboard {
+  position: fixed;
+  top: 80px; 
+  left: 20px;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 12px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+  */
+
+/*
+.molecule-dashboard {
+  width: 100%;
+  height: 100%;
+
+  background-color: #ffffff !important; 
+  border: 1px solid #b5b5b5;
+  border-radius: 6px;
+  box-sizing: border-box;
+  padding: 8px;
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  color: #000000 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.molecule-dashboard table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff !important;
+}
+
+.molecule-dashboard th,
+.molecule-dashboard td {
+  padding: 4px 6px;
+  text-align: left;
+  color: #333333 !important;
+  border-bottom: 1px solid #eee;
+}
+
+.molecule-dashboard th {
+  font-weight: bold;
+  border-bottom: 2px solid #ccc;
+}
+
+#glucose-btn {
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+#glucose-btn:hover {
+  opacity: 0.7;
+
+  filter: drop-shadow(0px 0px 4px rgba(0, 150, 255, 0.8)); 
+}
+
+#PCr-btn {
+  cursor: pointer;
+  pointer-events: all; 
+  transition: opacity 0.2s ease, filter 0.2s ease;
+}
+#PCr-btn:hover {
+  opacity: 0.7;
+  filter: drop-shadow(0px 0px 4px rgba(0, 150, 255, 0.8)); 
+}*/
+
+.greyed-out {
+  opacity: 0.25 !important;
+  filter: grayscale(100%) !important;
+  fill: #888888 !important; /* Forces color switch if filter fails in SVG */
+  transition: opacity 0.4s ease, filter 0.4s ease;
+}
+
+.active-state {
+  opacity: 1 !important;
+  filter: grayscale(0%) !important;
+  transition: opacity 0.4s ease, filter 0.4s ease;
+}
+
+.pop-text {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  pointer-events: none;
+  paint-order: stroke fill;
+  stroke: #ffffff;
+  stroke-width: 2px;
+  stroke-linejoin: round;
+  animation: pop-text-rise 0.8s ease-out forwards;
+}
+
+.pop-negative {
+  fill: #ff4d4d;
+}
+
+.pop-positive {
+  fill: #00e676;
+}
+
+@keyframes pop-text-rise {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
