@@ -1,4 +1,4 @@
-import { cellState, updateDashboard } from './state.js';
+import { cellState, updateDashboard } from 'js/state.js';
 const delay = (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
