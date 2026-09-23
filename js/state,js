@@ -1,0 +1,51 @@
+export const cellState = {
+  atp: 0,
+  adp: 0,
+  nad: 0,
+  nadh: 0,
+  fad: 0,
+  fadh2: 0,
+  h: 0,
+  h2o: 0,
+  o2: 0,
+  co2: 0,
+  pyruvate: 0,
+  matrixprotons: 0,
+  imsprotons: 0,
+  QH2count: 0,
+  MatrixQstate: 0,
+  cytochrome: 0,
+  cIVcycle: 0,
+};
+
+export function updateDashboard(svgDoc) {
+  /*
+
+  FOR USE IN FUTURE VERSIONS
+  if (!svgDoc) return;
+
+  const elements = {
+    atp: svgDoc.getElementById('atp-val'),
+    adp: svgDoc.getElementById('adp-val'),
+    nad: svgDoc.getElementById('nad-val'),
+    nadh: svgDoc.getElementById('nadh-val'),
+    fad: svgDoc.getElementById('fad-val'),
+    fadh2: svgDoc.getElementById('fadh2-val'),
+    h2o: svgDoc.getElementById('h2o-val'),
+    o2: svgDoc.getElementById('o2-val'),
+    co2: svgDoc.getElementById('co2-val'),
+    h: svgDoc.getElementById('h+-val'),
+    pyruvate: svgDoc.getElementById('pyruvateval'),
+  };
+  
+  for (const [key, element] of Object.entries(elements)) {
+    if (element && cellState[key] !== undefined) {
+      element.textContent = cellState[key];
+    }
+  }
+    */
+};
+
+
+
+
