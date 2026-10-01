@@ -1,4 +1,4 @@
-import { cellState, updateDashboard } from './js/state.js';
+import { cellState, strings, updateDashboard } from './state.js';
 const delay = (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
@@ -7,8 +7,53 @@ export function initETC(svgDoc) {
   const complex2Btn = svgDoc.getElementById('btnII');
   const complex3Btn = svgDoc.getElementById('btnIII');
   const complex4Btn = svgDoc.getElementById('btnIV');
+  const complex5Btn = svgDoc.getElementById('synthaseBtn');
 
   // Resolve the metabolites, electrons, protons, and counters used by the ETC animation.
+
+const synthase = {
+    ATP: svgDoc.getElementById('synthaseATP'),
+    ADP: svgDoc.getElementById('synthaseADP'),
+    cring1: svgDoc.getElementById('cring1'),
+    cring2: svgDoc.getElementById('cring2'),
+    cring3: svgDoc.getElementById('cring3'),
+    cring4: svgDoc.getElementById('cring4'),
+    cring5: svgDoc.getElementById('cring5'),
+    cring6: svgDoc.getElementById('cring6'),
+    cring7: svgDoc.getElementById('cring7'),
+    cring8: svgDoc.getElementById('cring8'),
+    rotationtext: svgDoc.getElementById('rotationtext'),
+    beta1: svgDoc.getElementById('beta1'),
+    beta2: svgDoc.getElementById('beta2'),
+    beta3: svgDoc.getElementById('beta3'),
+    beta1textATP: svgDoc.getElementById('beta1textATP'),
+    beta1textADP: svgDoc.getElementById('beta1textADP'),
+    beta1textEMPTY: svgDoc.getElementById('beta1textEMPTY'),
+    beta2textATP: svgDoc.getElementById('beta2textATP'),
+    beta2textADP: svgDoc.getElementById('beta2textADP'),
+    beta2textEMPTY: svgDoc.getElementById('beta2textEMPTY'),
+    beta3textATP: svgDoc.getElementById('beta3textATP'),
+    beta3textADP: svgDoc.getElementById('beta3textADP'),
+    beta3textEMPTY: svgDoc.getElementById('beta3textEMPTY'),
+    synthaseims1: svgDoc.getElementById('synthaseims1'),
+    synthasemat1: svgDoc.getElementById('synthasemat1'),
+    MATt1: svgDoc.getElementById('MATt1'),
+    MATt2: svgDoc.getElementById('MATt2'),
+    MATt3: svgDoc.getElementById('MATt3'),
+    MATt4: svgDoc.getElementById('MATt4'),
+    MATt5: svgDoc.getElementById('MATt5'),
+    MATt6: svgDoc.getElementById('MATt6'),
+    MATt7: svgDoc.getElementById('MATt7'),
+    MATt8: svgDoc.getElementById('MATt8'),
+    IMSt1: svgDoc.getElementById('IMSt1'),
+    IMSt2: svgDoc.getElementById('IMSt2'),
+    IMSt3: svgDoc.getElementById('IMSt3'),
+    IMSt4: svgDoc.getElementById('IMSt4'),
+    IMSt5: svgDoc.getElementById('IMSt5'),
+    IMSt6: svgDoc.getElementById('IMSt6'),
+    IMSt7: svgDoc.getElementById('IMSt7'),
+    IMSt8: svgDoc.getElementById('IMSt8'),
+  };
   const particles = {
     c1NADH: svgDoc.getElementById('cINADH'),
     c1NAD: svgDoc.getElementById('cINAD'),
@@ -180,10 +225,37 @@ export function initETC(svgDoc) {
     cellState.imsprotons = 0;
     cellState.QH2count = 0;
     cellState.cytochrome = 0;
-    if (matrixCounter) matrixCounter.textContent = cellState.matrixprotons;
-    if (imsCounter) imsCounter.textContent = cellState.imsprotons;
-    if (QH2counter) QH2counter.textContent = cellState.QH2count;
-    if (cytCcounter) cytCcounter.textContent = cellState.cytochrome;
+    strings.rotation = "000";
+    strings.beta1 = "O:";
+    strings.beta2 = "L:";
+    strings.beta3 = "T:";
+    strings.betatext1 = "EMPTY";
+    strings.betatext2 = "ADP+P\u1D62";
+    strings.betatext3 = "ATP";
+    matrixCounter.textContent = cellState.matrixprotons;
+    imsCounter.textContent = cellState.imsprotons;
+    QH2counter.textContent = cellState.QH2count;
+    cytCcounter.textContent = cellState.cytochrome;
+    synthase.rotationtext.textContent = strings.rotation;
+    synthase.beta1.textContent = strings.beta1;
+    synthase.beta2.textContent = strings.beta2;
+    synthase.beta3.textContent = strings.beta3;
+    [
+      synthase.beta1textATP,
+      synthase.beta1textADP,
+      synthase.beta1textEMPTY,
+      synthase.beta2textATP,
+      synthase.beta2textADP,
+      synthase.beta2textEMPTY,
+      synthase.beta3textATP,
+      synthase.beta3textADP,
+      synthase.beta3textEMPTY,
+    ].forEach((el) => isVisible(el, false));
+    [
+      synthase.beta1textEMPTY,
+      synthase.beta2textADP,
+      synthase.beta3textATP,
+    ].forEach((el) => isVisible(el, true));
 
     Object.values(paths).forEach((path) => setElementActive(path, false));
     particles.c1Electrons.forEach((el) => setElementActive(el, false));
@@ -212,10 +284,28 @@ export function initETC(svgDoc) {
     setElementActive(particles.c3ProtonsIMS, false);
     setElementActive(particles.protonfeeder, true);
     isVisible(particles.Qradical, false);
+    [synthase.MATt1, synthase.IMSt8].forEach((el) => isVisible(el, true));
+    [
+      synthase.MATt2,
+      synthase.MATt3,
+      synthase.MATt4,
+      synthase.MATt5,
+      synthase.MATt6,
+      synthase.MATt7,
+      synthase.MATt8,
+      synthase.IMSt1,
+      synthase.IMSt2,
+      synthase.IMSt3,
+      synthase.IMSt4,
+      synthase.IMSt5,
+      synthase.IMSt6,
+      synthase.IMSt7,
+    ].forEach((el) => isVisible(el, false));
     setElementActive(particles.QH2membrane, false);
     setElementActive(particles.Qmembrane, true);
     setElementActive(complex3Btn, false);
     setElementActive(complex4Btn, false);
+    setElementActive(complex5Btn, false);
     setElementActive(paths.protonstocIV, false);
     setElementActive(paths.oxygentocIV, false);
     setElementActive(paths.waterout, false);
@@ -223,6 +313,10 @@ export function initETC(svgDoc) {
     setElementActive(particles.cIVprotons, true);
     setElementActive(particles.cIVwater, true);
     setElementActive(particles.cytcelec, false);
+    for (let i = 1; i <= 8; i++) {
+    setElementActive(synthase[`synthasemat${i}`], false);
+  }
+  setElementActive(synthase.cring8, false);
   }
 
   resetETCState();
@@ -279,7 +373,6 @@ async function matrixubiquinonehandler() {
     }
 }
 async function handleComplex1Click() {
-
   // Complex I transfers electrons from NADH and pumps four matrix protons.
         
           particles.c1NADH.classList.add('intake-highlight');
@@ -344,7 +437,10 @@ async function handleComplex1Click() {
           .forEach((el) => setElementActive(el, false));
         setElementActive(particles.protonfeeder, true);
         await delay(800);
-       
+  if(cellState.imsprotons > cellState.matrixprotons){
+    setElementActive(complex5Btn, true);
+  }
+  else{setElementActive(complex5Btn, false);}
 }
 async function handleComplex2Click() {
   // Complex II transfers electrons from FADH2 and adds QH2 to the membrane pool.
@@ -388,6 +484,10 @@ async function handleComplex2Click() {
   setElementActive(paths.protonstoQ, false);
   setElementActive(particles.protonfeeder, true);
   await delay(800);
+  if(cellState.imsprotons > cellState.matrixprotons){
+    setElementActive(complex5Btn, true);
+  }
+  else{setElementActive(complex5Btn, false);}
 }
 
 async function cytochromehandler() {
@@ -506,7 +606,10 @@ async function handleComplex3Click() {
      }
     
 }
-
+  if(cellState.imsprotons > cellState.matrixprotons){
+    setElementActive(complex5Btn, true);
+  }
+  else{setElementActive(complex5Btn, false);}
 }
 
 async function handleComplex4Click(){
@@ -652,19 +755,165 @@ async function handleComplex4Click(){
   }
 
  }
-}
-if (complex1Btn) {
-  complex1Btn.addEventListener('click', handleComplex1Click);
+  if(cellState.imsprotons > cellState.matrixprotons){
+    setElementActive(complex5Btn, true);
+  }
+  else{setElementActive(complex5Btn, false);}
 }
 
-if (complex2Btn) {
-  complex2Btn.addEventListener('click', handleComplex2Click);
+async function cringhandler(){
+  setElementActive(synthase.synthaseims1, false);
+  cellState.imsprotons -= 1;
+  cellState.matrixprotons += 1;
+  imsCounter.textContent = cellState.imsprotons;
+  matrixCounter.textContent = cellState.matrixprotons;
+  
+  if(cellState.imshalfchannel < 8){
+    setElementActive(synthase[`cring${cellState.imshalfchannel}`],true);
+        isVisible(synthase[`IMSt${cellState.imshalfchannel}`], false);
+    isVisible(synthase[`IMSt${cellState.imshalfchannel+1}`], true);
+    cellState.imshalfchannel +=1;
+
+  }
+  else if (cellState.imshalfchannel === 8){
+    setElementActive(synthase.cring8 ,true);
+    cellState.imshalfchannel = 1;
+    isVisible(synthase.IMSt8, false);
+    isVisible(synthase.IMSt1, true);
+  }
+  await delay(100);
+
+    if(cellState.mathalfchannel < 8){
+      setElementActive(synthase[`cring${cellState.mathalfchannel}`],false);
+      isVisible(synthase[`MATt${cellState.mathalfchannel}`], false);
+    isVisible(synthase[`MATt${cellState.mathalfchannel+1}`], true);
+    cellState.mathalfchannel +=1;
+  }
+  else if (cellState.mathalfchannel === 8){
+    setElementActive(synthase.cring8,false);
+    cellState.mathalfchannel = 1;
+     isVisible(synthase.MATt8, false);
+    isVisible(synthase.MATt1, true);
+  }
+      setElementActive(synthase.synthasemat1, true);
+    await delay(400);
+    setElementActive(synthase.synthaseims1, true);
+    setElementActive(synthase.synthasemat1, false);
+
 }
-if (complex3Btn) {
-  complex3Btn.addEventListener('click', handleComplex3Click);
+async function atphandler(){
+  const nextBetaState = { 'O:': 'L:', 'L:': 'T:', 'T:': 'O:' };
+  const textForBetaState = { 'O:': 'EMPTY', 'L:': 'ADP', 'T:': 'ATP' };
+  const popTexts = [];
+
+  for (let i = 1; i <= 3; i++) {
+    const betaKey = `beta${i}`;
+    const currentState = strings[betaKey];
+    const nextState = nextBetaState[currentState] ?? currentState;
+
+    if (currentState === 'O:' && nextState === 'L:') {
+      popTexts.push(createPopText(synthase.ADP, '-1', false, 'left'));
+    } else if (currentState === 'T:' && nextState === 'O:') {
+      popTexts.push(createPopText(synthase.ATP, '+1', true, 'left'));
+    }
+
+    strings[betaKey] = nextState;
+    synthase[betaKey].textContent = strings[betaKey];
+
+    for (const textState of ['ATP', 'ADP', 'EMPTY']) {
+      isVisible(
+        synthase[`${betaKey}text${textState}`],
+        textState === textForBetaState[nextState],
+      );
+    }
   }
 
-if  (complex4Btn){
-  complex4Btn.addEventListener('click', handleComplex4Click);
+  if (popTexts.length > 0) {
+    await delay(800);
+    popTexts.forEach((popText) => popText.remove());
+  }
 }
+async function handleComplex5Click(){
+  if(cellState.imsprotons > cellState.matrixprotons){
+    if(cellState.synthaserunstate === 0){
+    cringhandler();
+    strings.rotation = "045";
+    synthase.rotationtext.textContent = strings.rotation;
+    cellState.synthaserunstate +=1;    
+  }
+   else if(cellState.synthaserunstate === 1){
+    cringhandler();
+    strings.rotation = "090";
+    synthase.rotationtext.textContent = strings.rotation;
+    cellState.synthaserunstate +=1;    
+  }
+   else if(cellState.synthaserunstate === 2){
+    cringhandler();
+    strings.rotation = "120";
+    synthase.rotationtext.textContent = strings.rotation;
+        atphandler();
+    await delay (800);
+
+    strings.rotation = "135";
+    synthase.rotationtext.textContent = strings.rotation;
+    cellState.synthaserunstate +=1;    
+  }
+  else if(cellState.synthaserunstate === 3){
+    cringhandler();
+    strings.rotation = "180";
+    synthase.rotationtext.textContent = strings.rotation;
+    cellState.synthaserunstate +=1;    
+  }
+   else if(cellState.synthaserunstate === 4){
+    cringhandler();
+    strings.rotation = "225";
+    synthase.rotationtext.textContent = strings.rotation;
+    cellState.synthaserunstate +=1;    
+  }
+   else if(cellState.synthaserunstate === 5){
+    cringhandler();
+    strings.rotation = "240";
+    synthase.rotationtext.textContent = strings.rotation;
+    atphandler();
+        await delay (800);
+
+ 
+    strings.rotation = "270";
+    synthase.rotationtext.textContent = strings.rotation;
+    cellState.synthaserunstate +=1;    
+  }
+  else if(cellState.synthaserunstate === 6){
+    cringhandler();
+    strings.rotation = "315";
+    synthase.rotationtext.textContent = strings.rotation;
+    cellState.synthaserunstate +=1;    
+  }
+  else if(cellState.synthaserunstate === 7){
+    cringhandler();
+    strings.rotation = "000";
+    atphandler();
+
+    synthase.rotationtext.textContent = strings.rotation;
+    cellState.synthaserunstate = 0;    
+  }
+}
+  if(cellState.imsprotons > cellState.matrixprotons){
+    setElementActive(complex5Btn, true);
+  }
+  else{setElementActive(complex5Btn, false);}
+
+}
+
+  complex1Btn.addEventListener('click', handleComplex1Click);
+
+
+  complex2Btn.addEventListener('click', handleComplex2Click);
+
+
+  complex3Btn.addEventListener('click', handleComplex3Click);
+
+  complex4Btn.addEventListener('click', handleComplex4Click);
+  
+  complex5Btn.addEventListener('click', handleComplex5Click);
+
 }
