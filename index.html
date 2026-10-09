@@ -2,15 +2,87 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="css/style.css" />
 </head>  
 
 <body>
+  <div class="viewport-wrapper">
+    <main class="app-container">
+      <div class="svg-wrapper">
+        <object id="svg-object" data="assets/Drawing3.svg" type="image/svg+xml"></object>
+      </div>
 
+      <template id="molecule-dashboard-template">
+        <div class="dashboard-content">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Molecule</th>
+                  <th>&Delta;<sub>n</sub></th>
+                  <th>Molecule</th>
+                  <th>&Delta;<sub>n</sub></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>ATP</td>
+                  <td id="ATPval">0</td>
+                  <td>NAD<sup>+</sup></td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td>ADP</td>
+                  <td>0</td>
+                  <td>NADH</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td>O<sub>2</sub></td>
+                  <td>0</td>
+                  <td>Fumarate</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td>H<sub>2</sub>O</td>
+                  <td>0</td>
+                  <td>Succinate</td>
+                  <td>0</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="info-text-block">
+            <h3>References:</h3>
+            <section class="reference-group">
+              <h4>ATP Synthase Mechanism</h4>
+              <ul>
+              <li class="reference-citation">F.E.C. Blanc, & G. Hummer, Mechanism of proton-powered c-ring rotation in a mitochondrial ATP synthase, Proc. Natl. Acad. Sci. U.S.A. 121 (11) e2314199121, https://doi.org/10.1073/pnas.2314199121 (2024).</li>
+              <li  class="reference-citation">Nakamoto RK, Baylis Scanlon JA, Al-Shawi MK. The rotary mechanism of the ATP synthase. Arch Biochem Biophys. 2008;476(1):43-50. doi:10.1016/j.abb.2008.05.004</li>
+              </ul>
+            </section>
+            <section class="reference-group">
+              <h4>Electron Transport Chain</h4>
+                   <ul>
+              <li class="reference-citation">Ahmad M, Wolberg A, Kahwaji CI. Biochemistry, Electron Transport Chain. [Updated 2023 Sep 4]. In: StatPearls [Internet]. Treasure Island (FL): StatPearls Publishing; 2023 Jan-. Available from: https://ncbi.nlm.nih.gov/books/NBK526105/</li>
+              <li class="reference-citation">THIS THING IS NOT ENTIRELY READY YET. COMPLEX IV lacks verification</li>
+              </ul>
+            </section>
+            <div class="references-image-frame">
+              <img
+                class="references-image"
+                data-src="assets/meme.png"
+                alt="Meme about readers who look at pictures instead of reading articles"
+              />
+            </div>
+          </div>
+        </div>
+      </template>
 
-  <object id="svg-object" data="assets/Drawing3.svg" type="image/svg+xml" width="100%" height="100%"></object>
+    </main>
+  </div>
 
-
-  <script type="module" src="./js/main.js"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>

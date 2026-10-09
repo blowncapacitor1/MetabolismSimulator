@@ -3,8 +3,8 @@ export const cellState = {
   adp: 0,
   nad: 0,
   nadh: 0,
-  fad: 0,
-  fadh2: 0,
+  Fumarate: 0,
+  Succinate: 0,
   h: 0,
   h2o: 0,
   o2: 0,
@@ -19,6 +19,7 @@ export const cellState = {
   imshalfchannel: 8,
   mathalfchannel: 1,
   synthaserunstate:0,
+  synthaserotation: 0,
   //F1state: 0,
 };
 
@@ -33,31 +34,20 @@ export const strings = {
 }
 
 export function updateDashboard(svgDoc) {
-  /*
+  const dashboardDocument = svgDoc || document;
+  const rows = dashboardDocument.querySelectorAll('.table-wrapper tbody tr');
 
-  FOR USE IN FUTURE VERSIONS
-  if (!svgDoc) return;
+  rows.forEach((row) => {
+    for (let index = 0; index < row.cells.length - 1; index += 2) {
+      const molecule = row.cells[index].textContent;
+      const stateKey = molecule.toLowerCase().replace(/[^a-z0-9]/g, '');
+      const valueCell = row.cells[index + 1];
 
-  const elements = {
-    atp: svgDoc.getElementById('atp-val'),
-    adp: svgDoc.getElementById('adp-val'),
-    nad: svgDoc.getElementById('nad-val'),
-    nadh: svgDoc.getElementById('nadh-val'),
-    fad: svgDoc.getElementById('fad-val'),
-    fadh2: svgDoc.getElementById('fadh2-val'),
-    h2o: svgDoc.getElementById('h2o-val'),
-    o2: svgDoc.getElementById('o2-val'),
-    co2: svgDoc.getElementById('co2-val'),
-    h: svgDoc.getElementById('h+-val'),
-    pyruvate: svgDoc.getElementById('pyruvateval'),
-  };
-  
-  for (const [key, element] of Object.entries(elements)) {
-    if (element && cellState[key] !== undefined) {
-      element.textContent = cellState[key];
+      if (cellState[stateKey] !== undefined) {
+        valueCell.textContent = cellState[stateKey];
+      }
     }
-  }
-    */
+  });
 };
 
 

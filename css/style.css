@@ -1,17 +1,58 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+.viewport-wrapper {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.app-container {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: flex-start;
+  align-content: start;
+  gap: 24px;
+  width: 100%;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.svg-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 698.98096 / 716.57917;
+}
+
+.svg-wrapper object {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
 
 html, body {
   margin: 0;
   padding: 0;
-  overflow: hidden;
-}
+  overflow: auto;
+  
+  background-color: #fff7bd;
+  background-image:
+    radial-gradient(rgba(135, 70, 55, 0.09) 0.65px, transparent 0.95px),
+    radial-gradient(rgba(255, 255, 255, 0.65) 0.6px, transparent 0.95px);
+  background-size: 4px 4px, 6px 6px;
+  background-position: 0 0, 2px 3px;
+  color: #000000;
 
-object {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  z-index: 1; /* Keep SVG behind interactive UI */
 }
 
 /* Pin button container strictly to top-right */
@@ -27,6 +68,34 @@ button {
   padding: 10px 16px;
   font-size: 14px;
   cursor: pointer;
+}
+
+@media (orientation: portrait) {
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .viewport-wrapper {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+
+  .app-container {
+    display: block;
+    width: max-content;
+    min-height: 0;
+    padding: 20px 0;
+  }
+
+  .svg-wrapper {
+    width: calc((100dvh - 40px) * 698.98096 / 716.57917);
+    height: auto;
+  }
 }
 
 /*Position table on top-left, shifted down 
