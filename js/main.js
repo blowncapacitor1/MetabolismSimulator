@@ -67,9 +67,12 @@ window.addEventListener('DOMContentLoaded', () => {
       const dashboardX = outerRedBox
         ? outerRedBox.x + outerRedBox.width + dashboardGap
         : viewBoxX + viewBoxWidth + dashboardGap;
-      const dashboardY = titleBounds
+      // How far the table sits below the top of the title (fraction of SVG height).
+      // Increase to move the table further down.
+      const dashboardTopOffset = viewBoxHeight * 0.05;
+      const dashboardY = (titleBounds
         ? titleBounds.y
-        : viewBoxY + (viewBoxHeight - dashboardHeight) / 2;
+        : viewBoxY + (viewBoxHeight - dashboardHeight) / 2) + dashboardTopOffset;
       const expandedRight = Math.max(viewBoxX + viewBoxWidth, dashboardX + dashboardWidth);
       const expandedViewBoxWidth = expandedRight - viewBoxX;
 
@@ -135,51 +138,6 @@ window.addEventListener('DOMContentLoaded', () => {
           text-align: left;
           border-left: 2px solid #373839;
         }
-        .molecule-dashboard .info-text-block {
-          flex: 0 0 auto;
-          width: 100%;
-          padding: ${viewBoxWidth * 0.008}px 0 0;
-          border: 1px solid #000000;
-          border-radius: 4px;
-          background-color: #fff2a8;
-          background-image: repeating-linear-gradient(
-            to bottom,
-            transparent 0,
-            transparent ${viewBoxWidth * 0.028}px,
-            rgba(143, 124, 36, 0.11) ${viewBoxWidth * 0.028}px,
-            rgba(143, 124, 36, 0.11) ${viewBoxWidth * 0.029}px
-          );
-          color: #241f0c;
-        }
-        .molecule-dashboard .info-text-block h3 {
-          margin: 0;
-          font-size: ${viewBoxWidth * 0.02}px;
-          padding: 0 ${viewBoxWidth * 0.01}px;
-        }
-        .molecule-dashboard .info-text-block p {
-          font-size: ${viewBoxWidth * 0.016}px;
-          overflow-wrap: anywhere;
-        }
-        .molecule-dashboard .references-image-frame {
-          padding: 0 ${viewBoxWidth * 0.012}px ${viewBoxWidth * 0.012}px;
-        }
-        .molecule-dashboard .references-image {
-          display: block;
-          width: 100%;
-          height: auto;
-        }
-        .molecule-dashboard .reference-group {
-          padding: ${viewBoxWidth * 0.006}px ${viewBoxWidth * 0.01}px;
-        }
-        .molecule-dashboard .reference-group h4 {
-          margin: 0 0 ${viewBoxWidth * 0.004}px;
-          font-size: ${viewBoxWidth * 0.018}px;
-        }
-        .molecule-dashboard .reference-citation {
-          margin: 0 0 ${viewBoxWidth * 0.005}px;
-          font-size: ${viewBoxWidth * 0.014}px;
-          line-height: 1.35;
-        }
       `;
       svgRoot.appendChild(styleEl);
 
@@ -191,8 +149,6 @@ window.addEventListener('DOMContentLoaded', () => {
       dashboard.setAttribute('height', dashboardHeight);
       dashboard.appendChild(svgDoc.importNode(tableTemplate.content, true));
       svgRoot.appendChild(dashboard);
-      const referencesImage = dashboard.querySelector('.references-image');
-      referencesImage.src = new URL(referencesImage.dataset.src, document.baseURI).href;
 
       svgRoot.setAttribute(
         'viewBox',
@@ -201,7 +157,6 @@ window.addEventListener('DOMContentLoaded', () => {
       const svgWrapper = document.querySelector('.svg-wrapper');
       const viewportWrapper = document.querySelector('.viewport-wrapper');
       const dashboardContent = dashboard.querySelector('.dashboard-content');
-      const referenceImage = dashboard.querySelector('.references-image');
       const portraitQuery = window.matchMedia('(orientation: portrait)');
       let expandedViewBoxHeight = viewBoxHeight;
       const updatePortraitLayout = (centerArtwork = false) => {
@@ -224,19 +179,13 @@ window.addEventListener('DOMContentLoaded', () => {
         });
       };
       const updateDashboardSize = () => {
-        let contentHeight = Math.ceil(dashboardContent.scrollHeight);
         const availableDashboardHeight = viewBoxY + viewBoxHeight - dashboardY;
-
-        if (contentHeight > availableDashboardHeight && referenceImage.complete) {
-          const overflow = contentHeight - availableDashboardHeight;
-          const currentImageHeight = referenceImage.offsetHeight;
-          const maxImageHeight = Math.max(0, currentImageHeight - overflow);
-          referenceImage.style.maxHeight = `${maxImageHeight}px`;
-          contentHeight = Math.ceil(dashboardContent.scrollHeight);
-        }
+        const contentHeight = Math.min(
+          Math.ceil(dashboardContent.scrollHeight),
+          availableDashboardHeight,
+        );
 
         expandedViewBoxHeight = viewBoxHeight;
-        contentHeight = Math.min(contentHeight, availableDashboardHeight);
 
         dashboard.setAttribute('height', contentHeight);
         svgRoot.setAttribute(
@@ -245,6 +194,11 @@ window.addEventListener('DOMContentLoaded', () => {
         );
         svgWrapper.style.aspectRatio =
           `${expandedViewBoxWidth} / ${expandedViewBoxHeight}`;
+        // Lets the CSS size the SVG (and the references panel) to the viewport height
+        document.documentElement.style.setProperty(
+          '--svg-ratio',
+          expandedViewBoxWidth / expandedViewBoxHeight,
+        );
         updatePortraitLayout();
       };
 
