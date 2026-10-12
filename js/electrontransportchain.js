@@ -1,3 +1,4 @@
+//Nope, not accurate yet. Every time I check https://pmc.ncbi.nlm.nih.gov/articles/PMC11896598/, I find more and more errors in my program. 
 import { cellState, strings, updateDashboard } from './state.js';
 import { getETCElements } from './elements.js';
 import { makeUI } from './svgHelpers.js';
