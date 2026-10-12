@@ -20,7 +20,7 @@ export const cellState = {
   mathalfchannel: 1,
   synthaserunstate:0,
   synthaserotation: 0,
-  //F1state: 0,
+  complex4state: 0,
 };
 
 export const strings = {

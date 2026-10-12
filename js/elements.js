@@ -62,9 +62,7 @@ export function getETCElements(svgDoc) {
       svgDoc.getElementById('cIIIelec1'),
       svgDoc.getElementById('cIIIelec2'),
     ],
-    cIVelec1: svgDoc.getElementById('cIVelec1'),
-    cIVelec2: svgDoc.getElementById('cIVelec2'),
-
+  
     cytcelec: svgDoc.getElementById('cytcelec'),
     cytCount: svgDoc.getElementById('cytCcounter'),
     cImat1: svgDoc.getElementById('cImat1'),
@@ -92,6 +90,17 @@ export function getETCElements(svgDoc) {
     QH2membrane: svgDoc.getElementById('QH2'),
     Qmembrane: svgDoc.getElementById('Q'),
     cIinput: svgDoc.getElementById('cIinput'),
+    //stuff for cytochrome c oxidase
+    cIVprotonsInside1: svgDoc.getElementById('cIVprotonsInside1'),
+    cIVprotonsInside2: svgDoc.getElementById('cIVprotonsInside2'),
+    cIVhydroxyInside1: svgDoc.getElementById('cIVhydroxyInside1'),
+    cIVhydroxyInside2: svgDoc.getElementById('cIVhydroxyInside2'),
+    cIVdioxygenInside: svgDoc.getElementById('cIVdioxygenInside'),
+    cIVoxygenInside1: svgDoc.getElementById('cIVoxygenInside1'),
+    cIVoxygenInside2: svgDoc.getElementById('cIVoxygenInside2'),
+    cIVelec1: svgDoc.getElementById('cIVelec1'),
+    cIVelec2: svgDoc.getElementById('cIVelec2'),
+    
   };
 
   const paths = {

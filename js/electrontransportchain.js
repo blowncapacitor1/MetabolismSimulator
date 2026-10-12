@@ -12,7 +12,7 @@ export function initETC(svgDoc) {
   const runtime = { complex3Running: false, cringRotation: 0 };
   const ctx = { el, ui, state: cellState, strings, runtime };
 
-  const { setElementActive, delay, createPopText } = ui;
+  const { setElementActive, isVisible, delay, createPopText } = ui;
   const { buttons, synthase, particles, paths, counters, cringBaseTransform } = el;
 
   const complex1Btn = buttons.I;
@@ -248,152 +248,189 @@ export function initETC(svgDoc) {
     }
   }
 
-  // ---- Complex IV ----
   async function handleComplex4Click() {
-    // Complex IV consumes cytochrome c, oxygen, and matrix protons to produce water.
-    if (cellState.cytochrome >= 1) {
-      if (cellState.cIVcycle === 0) {
+    //If complex IV is in the fully reduced (R) state:
+    if (cellState.complex4state === 0){
+      cellState.complex4state = 1;
+    if (cellState.cytochrome >= 2) {
+        //None of this is to (temporal) scale.
+        //R -> A
+        setElementActive(paths.oxygentocIV, true);
+        await delay(500);
+        setElementActive(particles.cIVoxygen, false);
+        const oxygenPop = createPopText(particles.cIVoxygen, '-1', false, 'left');
+        cellState.o2 -= 1;
+        isVisible(particles.cIVdioxygenInside, true);
+        updateDashboard(svgDoc);
+        await delay(800);
+        oxygenPop.remove();
+        await delay(500);
+        setElementActive(paths.oxygentocIV, false);
+        setElementActive(particles.cIVoxygen, true);
+        //A -> Pm
+        await delay(800);
+        isVisible(particles.cIVdioxygenInside, false);
+        isVisible(particles.cIVoxygenInside1, true);
+        isVisible(particles.cIVoxygenInside2, true);
+        await delay(800);
+        //Pm -> Pr
         setElementActive(paths.cytCtocIV, true);
         setElementActive(particles.cIVelec1, true);
+        await delay(800);
+        setElementActive(paths.cytCtocIV, false);
         cellState.cytochrome -= 1;
         cytCcounter.textContent = cellState.cytochrome;
+        //Pr -> F
+        setElementActive(paths.protonstocIV, true);
+        await delay(500);
+        setElementActive(particles.cIVprotons, false);
+        const protonPop = createPopText(particles.cIVprotons, '-1', false, 'left');
+        await delay(800);
+        protonPop.remove();
+        setElementActive(particles.cIVprotonsInside1, true);
+        setElementActive(particles.cIVprotons, true);
+        setElementActive(paths.protonstocIV, false);
+        setElementActive(particles.cIVmat1, false);
+        await delay(100);
         cellState.matrixprotons -= 1;
         matrixCounter.textContent = cellState.matrixprotons;
-        await delay(100);
-        setElementActive(particles.cIVmat1, false);
         await delay(100);
         setElementActive(particles.cIVims1, true);
         cellState.imsprotons += 1;
         imsCounter.textContent = cellState.imsprotons;
-        await delay(400);
-        setElementActive(paths.cytCtocIV, false);
-        cellState.cIVcycle += 1;
-        cytochromehandler();
-      } else if (cellState.cIVcycle === 1) {
+        await delay(800);
+        //F -> Oh
         setElementActive(paths.cytCtocIV, true);
-        setElementActive(particles.cIVelec2, true);
+        setElementActive(paths.protonstocIV, true);
+        await delay(500);
+        setElementActive(particles.cIVprotons, false);
+        const protonPop2 = createPopText(particles.cIVprotons, '-1', false, 'left');
         cellState.cytochrome -= 1;
         cytCcounter.textContent = cellState.cytochrome;
+        protonPop2.remove();
+        setElementActive(particles.cIVprotonsInside2, true);
+        setElementActive(particles.cIVelec2, true);
+        setElementActive(particles.cIVprotons, true);
+        setElementActive(paths.protonstocIV, false);
+        await delay(800);
+        setElementActive(paths.electronstoO2, true);
+        await delay(500);
+        setElementActive(paths.electronstoO2, false);
+        setElementActive(particles.cIVprotonsInside1, false);
+        setElementActive(particles.cIVprotonsInside2, false);
+         setElementActive(particles.cIVmat2, false);
+        await delay(100);
         cellState.matrixprotons -= 1;
         matrixCounter.textContent = cellState.matrixprotons;
-        await delay(100);
-        setElementActive(particles.cIVmat2, false);
         await delay(100);
         setElementActive(particles.cIVims2, true);
         cellState.imsprotons += 1;
         imsCounter.textContent = cellState.imsprotons;
-        await delay(400);
-        setElementActive(paths.cytCtocIV, false);
-        setElementActive(particles.cIVoxygen, false);
-        setElementActive(paths.oxygentocIV, true);
-        const oxygenPop = createPopText(particles.cIVoxygen, '-1', false, 'left');
-        cellState.o2 -= 1;
-        updateDashboard(svgDoc);
-        setElementActive(paths.electronstoO2, true);
-
         setElementActive(particles.cIVelec1, false);
         setElementActive(particles.cIVelec2, false);
-
-        cellState.matrixprotons -= 2;
-        matrixCounter.textContent = cellState.matrixprotons;
-
-        await delay(600);
-        oxygenPop.remove();
-        setElementActive(paths.oxygentocIV, false);
-
-        setElementActive(paths.electronstoO2, false);
-
-        cellState.cIVcycle += 1;
-        cytochromehandler();
-      } else if (cellState.cIVcycle === 2) {
-        setElementActive(paths.cytCtocIV, true);
-        setElementActive(particles.cIVelec1, true);
+        isVisible(particles.cIVoxygenInside1, false);
+        isVisible(particles.cIVoxygenInside2, false);
+        isVisible(particles.cIVhydroxyInside1, true);
+        isVisible(particles.cIVhydroxyInside2, true);
+    }
+      
+    
+  }
+  //If complex IV is in the resting oxidised (Oh) state:
+  else if (cellState.complex4state === 1){
+      cellState.complex4state = 0;
+    if (cellState.cytochrome >= 2) {
+      //Oh -> Eh
+       setElementActive(paths.cytCtocIV, true);
+        setElementActive(paths.protonstocIV, true);
+        await delay(500);
+        setElementActive(particles.cIVprotons, false);
+        const protonPop3 = createPopText(particles.cIVprotons, '-1', false, 'left');
         cellState.cytochrome -= 1;
         cytCcounter.textContent = cellState.cytochrome;
+        protonPop3.remove();
+        setElementActive(particles.cIVprotonsInside1, true);
+        setElementActive(particles.cIVelec1, true);
+        setElementActive(particles.cIVprotons, true);
+        setElementActive(paths.protonstocIV, false);
+        await delay(800);
+        setElementActive(paths.electronstoO2, true);
+        await delay(500);
+        setElementActive(paths.electronstoO2, false);
+        setElementActive(particles.cIVprotonsInside1, false);
+        setElementActive(particles.cIVelec1, false);
+        isVisible(particles.cIVhydroxyInside1, false);
+        const waterPop2 = createPopText(particles.cIVwater, '+1', true, 'left');
+        cellState.h2o += 1;
+        updateDashboard(svgDoc);
+        setElementActive(particles.cIVmat3, false);
+        await delay(100);
         cellState.matrixprotons -= 1;
         matrixCounter.textContent = cellState.matrixprotons;
-        await delay(100);
-        setElementActive(particles.cIVmat3, false);
         await delay(100);
         setElementActive(particles.cIVims3, true);
         cellState.imsprotons += 1;
         imsCounter.textContent = cellState.imsprotons;
-        await delay(400);
-        setElementActive(paths.cytCtocIV, false);
-        setElementActive(particles.cIVprotons, false);
+        await delay(300);
+        waterPop2.remove();
+        //Eh -> R
+        setElementActive(paths.cytCtocIV, true);
         setElementActive(paths.protonstocIV, true);
-        const protonPop = createPopText(particles.cIVprotons, '-1', false, 'left');
-
-        setElementActive(paths.electronstoO2, true);
-
-        setElementActive(particles.cIVelec1, false);
-
-        await delay(600);
-        protonPop.remove();
+        await delay(500);
+        setElementActive(particles.cIVprotons, false);
+        const protonPop4 = createPopText(particles.cIVprotons, '-1', false, 'left');
+        cellState.cytochrome -= 1;
+        cytCcounter.textContent = cellState.cytochrome;
+        protonPop4.remove();
+        setElementActive(particles.cIVprotonsInside1, true);
+        setElementActive(particles.cIVelec1, true);
         setElementActive(particles.cIVprotons, true);
         setElementActive(paths.protonstocIV, false);
-
+        await delay(800);
+        setElementActive(paths.electronstoO2, true);
+        await delay(500);
         setElementActive(paths.electronstoO2, false);
+        setElementActive(particles.cIVprotonsInside1, false);
+        setElementActive(particles.cIVelec1, false);
+        isVisible(particles.cIVhydroxyInside1, false);
+        isVisible(particles.cIVhydroxyInside2, false);
 
-        setElementActive(paths.waterout, true);
         const waterPop = createPopText(particles.cIVwater, '+1', true, 'left');
         cellState.h2o += 1;
         updateDashboard(svgDoc);
-        await delay(500);
-        waterPop.remove();
-        setElementActive(paths.waterout, false);
-
-        cellState.cIVcycle += 1;
-        cytochromehandler();
-      } else if (cellState.cIVcycle === 3) {
-        setElementActive(paths.cytCtocIV, true);
-        setElementActive(particles.cIVelec1, true);
-        cellState.cytochrome -= 1;
-        cytCcounter.textContent = cellState.cytochrome;
+        setElementActive(particles.cIVmat4, false);
+        await delay(100);
         cellState.matrixprotons -= 1;
         matrixCounter.textContent = cellState.matrixprotons;
-        await delay(100);
-        setElementActive(particles.cIVmat4, false);
         await delay(100);
         setElementActive(particles.cIVims4, true);
         cellState.imsprotons += 1;
         imsCounter.textContent = cellState.imsprotons;
-        await delay(400);
-        setElementActive(paths.cytCtocIV, false);
-        setElementActive(particles.cIVprotons, false);
-        setElementActive(paths.protonstocIV, true);
-        const protonPop = createPopText(particles.cIVprotons, '-1', false, 'left');
-
-        setElementActive(paths.electronstoO2, true);
-
-        setElementActive(particles.cIVelec1, false);
-
-        await delay(600);
-        protonPop.remove();
-        setElementActive(particles.cIVprotons, true);
-        setElementActive(paths.protonstocIV, false);
-
-        setElementActive(paths.electronstoO2, false);
-
-        setElementActive(paths.waterout, true);
-        const waterPop = createPopText(particles.cIVwater, '+1', true, 'left');
-        cellState.h2o += 1;
-        updateDashboard(svgDoc);
-        await delay(500);
+        await delay(300);
         waterPop.remove();
-        setElementActive(paths.waterout, false);
+        //Reset proton arrangement
+        await delay(800);
+         setElementActive(particles.cIVmat1, true);
+         setElementActive(particles.cIVmat2, true);
+         setElementActive(particles.cIVmat3, true);
+         setElementActive(particles.cIVmat4, true);
+         setElementActive(particles.cIVims1, false);
+        setElementActive(particles.cIVims2, false);
+        setElementActive(particles.cIVims3, false);
+        setElementActive(particles.cIVims4, false);
 
-        cellState.cIVcycle = 0;
-        cytochromehandler();
-      }
-    }
-    if (cellState.imsprotons > cellState.matrixprotons) {
+   }
+
+  }
+  if (cellState.imsprotons > cellState.matrixprotons) {
       setElementActive(complex5Btn, true);
     } else {
       setElementActive(complex5Btn, false);
     }
-  }
 
+  }
+  
+  
   // ---- Complex V (ATP synthase) ----
   async function cringhandler() {
     setElementActive(synthase.synthaseims1, false);

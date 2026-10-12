@@ -1,4 +1,3 @@
-// Puts both the model state and the SVG back to their starting appearance.
 export function resetETCState(ctx) {
   const { el, ui, state: cellState, strings, runtime } = ctx;
   const { setElementActive, isVisible } = ui;
@@ -12,9 +11,9 @@ export function resetETCState(ctx) {
   const cytCcounter = counters.cytC;
 
   cellState.matrixprotons = 0;
-  cellState.imsprotons = 0;
+  cellState.imsprotons = 999;
   cellState.QH2count = 0;
-  cellState.cytochrome = 0;
+  cellState.cytochrome = 999;
   cellState.imshalfchannel = 1;
   cellState.mathalfchannel = 3;
   strings.rotation = "000";
@@ -101,4 +100,15 @@ export function resetETCState(ctx) {
   setElementActive(synthase.cring2, false);
   setElementActive(synthase.synthaseims1, true);
   setElementActive(synthase.synthasemat1, false);
+  //stuff for cytochrome c oxidase
+  setElementActive(particles.cIVprotonsInside1, false);
+  setElementActive(particles.cIVprotonsInside2, false);
+  isVisible(particles.cIVoxygenInside1, false);
+  isVisible(particles.cIVoxygenInside2, false);
+  isVisible(particles.cIVdioxygenInside, false);
+  isVisible(particles.cIVhydroxyInside1, false);
+  isVisible(particles.cIVhydroxyInside2, false);
+
+
+
 }
