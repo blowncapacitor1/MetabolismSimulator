@@ -1,4 +1,3 @@
-// Cytochrome c pool handler, shared by Complexes III and IV.
 export function createCytochromeHandler(ctx) {
   const { el, ui, state: cellState } = ctx;
   const { setElementActive, delay } = ui;

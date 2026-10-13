@@ -1,17 +1,19 @@
-//Nope, not accurate yet. Every time I check https://pmc.ncbi.nlm.nih.gov/articles/PMC11896598/, I find more and more errors in my program. 
-import { cellState, strings, updateDashboard } from './state.js';
+import {
+  cellState, strings, updateDashboard,
+  complex4, COMPLEX4_CYCLE, COMPLEX4_CYTC_COST, COMPLEX4_HALF_CYCLES, complex4CytCNeeded,
+} from './state.js';
 import { getETCElements } from './elements.js';
 import { makeUI } from './svgHelpers.js';
 import { resetETCState } from './render.js';
 import { createQuinonePool } from './quinonePool.js';
 import { createCytochromeHandler } from './cytochrome.js';
+import { createComplex4 } from './cmplx4.js';
 
 export function initETC(svgDoc) {
-  // ---- Shared context handed to every module ----
   const el = getETCElements(svgDoc);
   const ui = makeUI(svgDoc);
   const runtime = { complex3Running: false, cringRotation: 0 };
-  const ctx = { el, ui, state: cellState, strings, runtime };
+  const ctx = { el, ui, state: cellState, strings, runtime, svgDoc };
 
   const { setElementActive, isVisible, delay, createPopText } = ui;
   const { buttons, synthase, cmplx4, particles, paths, counters, cringBaseTransform } = el;
@@ -26,10 +28,10 @@ export function initETC(svgDoc) {
   const QH2counter = counters.QH2;
   const cytCcounter = counters.cytC;
 
-  // ---- Initial appearance, then shared handlers ----
   resetETCState(ctx);
   const { ubiquinonehandler, matrixubiquinonehandler } = createQuinonePool(ctx);
   const cytochromehandler = createCytochromeHandler(ctx);
+  const { steps: complex4Steps, renderState: renderComplex4State } = createComplex4(ctx);
 
   async function handleComplex1Click() {
     // Complex I transfers electrons from NADH and pumps four matrix protons.
@@ -249,184 +251,40 @@ export function initETC(svgDoc) {
     }
   }
 
+  // ---- Complex IV (cytochrome c oxidase), step by step ----
+  // The steps and the STATE display live in cmplx4.js. Each button press moves the enzyme
+  // to the next intermediate only. The two presses that start a half-cycle (from R, and from
+  // Oh) need enough cytochrome c up front to finish that half (R -> Oh, or Oh -> R); every
+  // other press is always allowed.
+
   async function handleComplex4Click() {
-    //If complex IV is in the fully reduced (R) state:
-    if (cellState.complex4state === 0){
-    if (cellState.cytochrome >= 2) {
-       cellState.complex4state = 1;
-      //R -> A
-      setElementActive(cmplx4.O2in, true);
-       await delay(500);
-        setElementActive(cmplx4.cIVoxygen, false);
-        const oxygenPop = createPopText(cmplx4.cIVoxygen, '-1', false, 'left');
-        cellState.o2 -= 1;
-         isVisible(cmplx4.iron_dioxygen, true);
-        updateDashboard(svgDoc);
-        await delay(800);
-        oxygenPop.remove();
-        await delay(500);
-        setElementActive(cmplx4.O2in, false);
-        setElementActive(cmplx4.cIVoxygen, true);
-        //A -> Pm
-        await delay(800);
-        isVisible(cmplx4.scission, true);
-        isVisible(cmplx4.YtoFe, true);
-        await delay(800);
-        isVisible(cmplx4.Y_OH, false);
-        isVisible(cmplx4.Y_Oradical, true);
-        isVisible(cmplx4.iron_dioxygen, false);
-        isVisible(cmplx4.iron_oxygen2minus, true);
-        isVisible(cmplx4.copper_hydroxide, true);
-        isVisible(cmplx4.scission, false);
-                isVisible(cmplx4.YtoFe, false);
+    if (complex4.running) return;
 
+    const from = complex4.intermediate;
 
-         //Pm -> Pr
-         await delay(800);
-        setElementActive(paths.cytCtocIV, true);
-        isVisible(cmplx4.Y_Oradical, false);
-        isVisible(cmplx4.Y_Ominus, true);
-        await delay(800);
-        setElementActive(paths.cytCtocIV, false);
-        cellState.cytochrome -= 1;
-        cytCcounter.textContent = cellState.cytochrome;
-        //Pr -> F
-        await delay(800)
-        setElementActive(cmplx4.protonstocIV, true);
-        await delay(500);
-        setElementActive(cmplx4.cIVprotons, false);
-        const protonPop = createPopText(cmplx4.cIVprotons, '-1', false, 'left');
-        await delay(800);
-                isVisible(cmplx4.copper_hydroxide, false);
-        isVisible(cmplx4.copper_water, true);
+    // The press that starts a half-cycle (from R, or from Oh) needs enough cytochrome c
+    // to carry it all the way to the other end (Oh, or R).
+    if (Object.hasOwn(COMPLEX4_HALF_CYCLES, from)
+        && cellState.cytochrome < complex4CytCNeeded(from)) return;
 
-        protonPop.remove();
-        setElementActive(cmplx4.cIVprotons, true);
-        setElementActive(cmplx4.protonstocIV, false);
-        setElementActive(cmplx4.cIVmat1, false);
-        await delay(100);
-        cellState.matrixprotons -= 1;
-        matrixCounter.textContent = cellState.matrixprotons;
-        await delay(100);
-        setElementActive(cmplx4.cIVims1, true);
-        cellState.imsprotons += 1;
-        imsCounter.textContent = cellState.imsprotons;
-        await delay(800);
+    // Safety net: never begin a step that consumes cytochrome c that isn't there.
+    if (cellState.cytochrome < COMPLEX4_CYTC_COST[from]) return;
+
+    complex4.running = true;
+    try {
+      await complex4Steps[from]();
+      complex4.intermediate =
+        COMPLEX4_CYCLE[(COMPLEX4_CYCLE.indexOf(from) + 1) % COMPLEX4_CYCLE.length];
+      renderComplex4State();
+    } finally {
+      complex4.running = false;
+      if (cellState.imsprotons > cellState.matrixprotons) {
+        setElementActive(complex5Btn, true);
+      } else {
+        setElementActive(complex5Btn, false);
+      }
     }
   }
-  //If complex IV is in the fully oxidized (Oh) state:
-  else if (cellState.complex4state === 1){
-      cellState.complex4state = 0;
-    if (cellState.cytochrome >= 2) {
-       //F -> Oh
-        setElementActive(paths.cytCtocIV, true);
-        setElementActive(cmplx4.protonstocIV, true);
-        await delay(500);
-        setElementActive(cmplx4.cIVprotons, false);
-        const protonPop2 = createPopText(cmplx4.cIVprotons, '-1', false, 'left');
-        cellState.cytochrome -= 1;
-        cytCcounter.textContent = cellState.cytochrome;
-        await delay(800);
-        protonPop2.remove();
-        setElementActive(cmplx4.protonstocIV, false);
-        setElementActive(cmplx4.cIVprotons, true);
-        await delay(500);
-        isVisible(cmplx4.iron_oxygen2minus, false);
-        isVisible(cmplx4.iron_hydroxide, true);
-        setElementActive(cmplx4.cIVmat2, false);
-        await delay(100);
-        cellState.matrixprotons -= 1;
-        matrixCounter.textContent = cellState.matrixprotons;
-        await delay(100);
-        setElementActive(cmplx4.cIVims2, true);
-        cellState.imsprotons += 1;
-        imsCounter.textContent = cellState.imsprotons;
-         //Oh -> Eh
-         await delay(800);
-              setElementActive(paths.cytCtocIV, true);
-              setElementActive(cmplx4.protonstocIV, true);
-              await delay(500);
-              setElementActive(cmplx4.cIVprotons, false);
-              const protonPop3 = createPopText(cmplx4.cIVprotons, '-1', false, 'left');
-              cellState.cytochrome -= 1;
-              cytCcounter.textContent = cellState.cytochrome;
-              await delay(500);
-              protonPop3.remove();
-              setElementActive(cmplx4.cIVprotons, true);
-              setElementActive(cmplx4.protonstocIV, false);
-              await delay(500);
-              isVisible(cmplx4.copper_h2o_out, true);
-              setElementActive(cmplx4.h2o_out, true);
-              isVisible(cmplx4.copper_water, false);
-              isVisible(cmplx4.iron_hydroxide, false);
-              isVisible(cmplx4.iron_water, true);
-              setElementActive(cmplx4.waterout, true);
-              
-              const waterPop1 = createPopText(cmplx4.waterout, '+1', true, 'left');
-              cellState.h2o += 1;
-              await delay(500);
-              setElementActive(cmplx4.waterout, false);
-              isVisible(cmplx4.copper_h2o_out, false);
-              setElementActive(cmplx4.h2o_out, false);
-              updateDashboard(svgDoc);
-              setElementActive(cmplx4.cIVmat3, false);
-              await delay(100);
-              cellState.matrixprotons -= 1;
-              matrixCounter.textContent = cellState.matrixprotons;
-              await delay(100);
-              setElementActive(cmplx4.cIVims3, true);
-              cellState.imsprotons += 1;
-              imsCounter.textContent = cellState.imsprotons;
-              await delay(300);
-              waterPop1.remove();
-          //Eh-> R
-          await delay(800);
-              setElementActive(paths.cytCtocIV, true);
-              setElementActive(cmplx4.protonstocIV, true);
-              await delay(500);
-              setElementActive(cmplx4.cIVprotons, false);
-              const protonPop4 = createPopText(cmplx4.cIVprotons, '-1', false, 'left');
-              cellState.cytochrome -= 1;
-              cytCcounter.textContent = cellState.cytochrome;
-               isVisible(cmplx4.Y_Ominus, false);
-               isVisible(cmplx4.Y_OH, true);
-              await delay(500);
-              protonPop4.remove();
-              setElementActive(cmplx4.cIVprotons, true);
-              setElementActive(cmplx4.protonstocIV, false);
-              await delay(500);
-              isVisible(cmplx4.iron_h2o_out, true);
-              setElementActive(cmplx4.h2o_out, true);
-              isVisible(cmplx4.iron_water, false);
-              setElementActive(cmplx4.waterout, true);
-              
-              const waterPop2 = createPopText(cmplx4.waterout, '+1', true, 'left');
-              cellState.h2o += 1;
-              await delay(500);
-              setElementActive(cmplx4.waterout, false);
-              isVisible(cmplx4.iron_h2o_out, false);
-              setElementActive(cmplx4.h2o_out, false);
-              updateDashboard(svgDoc);
-              setElementActive(cmplx4.cIVmat4, false);
-              await delay(100);
-              cellState.matrixprotons -= 1;
-              matrixCounter.textContent = cellState.matrixprotons;
-              await delay(100);
-              setElementActive(cmplx4.cIVims4, true);
-              cellState.imsprotons += 1;
-              imsCounter.textContent = cellState.imsprotons;
-              await delay(300);
-              waterPop2.remove();
-
-    }
-  }
-
-  if (cellState.imsprotons > cellState.matrixprotons) {
-    setElementActive(complex5Btn, true);
-  } else {
-    setElementActive(complex5Btn, false);
-  }
-}
 
   // ---- Complex V (ATP synthase) ----
   async function cringhandler() {

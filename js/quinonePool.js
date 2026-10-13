@@ -1,4 +1,3 @@
-// Membrane QH2 pool and matrix-side Q handlers, shared by Complexes I, II and III.
 export function createQuinonePool(ctx) {
   const { el, ui, state: cellState, runtime } = ctx;
   const { setElementActive, isVisible, delay } = ui;
@@ -7,7 +6,6 @@ export function createQuinonePool(ctx) {
   const matrixCounter = counters.matrix;
   const QH2counter = counters.QH2;
 
-  // Enable or disable Complex III according to the membrane QH2 count.
   async function ubiquinonehandler() {
     const hasQH2 = cellState.QH2count !== 0;
     setElementActive(particles.QH2membrane, hasQH2);
@@ -44,7 +42,7 @@ export function createQuinonePool(ctx) {
       isVisible(particles.Qmatrix, true);
       isVisible(particles.Qradical, false);
       setElementActive(paths.protonstoQmat, false);
-      setElementActive(particles.protonfeeder, false)
+      setElementActive(particles.protonfeeder, true)
       setElementActive(paths.QradicaltoQH2, false);
 
       await delay(400);

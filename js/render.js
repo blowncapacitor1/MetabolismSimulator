@@ -11,9 +11,9 @@ export function resetETCState(ctx) {
   const cytCcounter = counters.cytC;
 
   cellState.matrixprotons = 0;
-  cellState.imsprotons = 999;
+  cellState.imsprotons = 0;
   cellState.QH2count = 0;
-  cellState.cytochrome = 999;
+  cellState.cytochrome = 0;
   cellState.imshalfchannel = 1;
   cellState.mathalfchannel = 3;
   strings.rotation = "000";

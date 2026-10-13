@@ -50,7 +50,7 @@ html, body {
   padding: 0;
   overflow: auto;
   
-  background-color: #fff7bd;
+  background-color: #fff9c9;
   background-image:
     radial-gradient(rgba(135, 70, 55, 0.09) 0.65px, transparent 0.95px),
     radial-gradient(rgba(255, 255, 255, 0.65) 0.6px, transparent 0.95px);

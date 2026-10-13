@@ -1,4 +1,3 @@
-// Looks up every SVG element the ETC model touches, once, and groups them.
 export function getETCElements(svgDoc) {
   const buttons = {
     I: svgDoc.getElementById('btnI'),
@@ -37,7 +36,6 @@ export function getETCElements(svgDoc) {
     synthasemat1: svgDoc.getElementById('synthasemat1'),
   };
 
-  // Captured once at load so resets and rotations always start from the SVG's original transform.
   const cringBaseTransform = synthase.cring.getAttribute('transform');
 
   const particles = {
@@ -141,6 +139,14 @@ export function getETCElements(svgDoc) {
     iron_h2o_out: svgDoc.getElementById('iron_h2o_out'),
     copper_h2o_out: svgDoc.getElementById('copper_h2o_out'),
     scission: svgDoc.getElementById('scission'),
+
+    STATE_R: svgDoc.getElementById('STATE_R'),
+    STATE_A: svgDoc.getElementById('STATE_A'),
+    STATE_Pm: svgDoc.getElementById('STATE_Pm'),
+    STATE_Pr: svgDoc.getElementById('STATE_Pr'),
+    STATE_F: svgDoc.getElementById('STATE_F'),
+    STATE_Oh: svgDoc.getElementById('STATE_Oh'),
+    STATE_Eh: svgDoc.getElementById('STATE_Eh'),
   };
 
   const counters = {
