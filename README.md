@@ -1,7 +1,9 @@
 # Semi-interactive Metabolism Simulator
 
-A visualization of the Electron transport chain in mammalian mitochondria. Based on information from <add URLS> 
-If this turns out to be even remotely functional, at some point I may expand it to include other metabolic pathways as well. 
+A visualization of the Electron transport chain in mammalian mitochondria. See references.md for the sources of the information used for this project.
+I have tried to make it accurate, but there may be some errors. Additionally, it is still covered in a bunch of rough edges. Any feedback would be highly appreciated.
+
+If this turns out to be even remotely functional, at some point I may expand it to include other metabolic pathways. 
 
 
 ## License
