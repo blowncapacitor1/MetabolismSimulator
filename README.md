@@ -1,7 +1,7 @@
 # Semi-interactive Metabolism Simulator
 
-A visualization of the metabolic pathways in a skeletal muscle cell. At the moment, there is only the electron transport chain. 
-At some point I will expand it to include all metabolic pathways (see preview.png).
+A visualization of the Electron transport chain in mammalian mitochondria. Based on information from <add URLS> 
+If this turns out to be even remotely functional, at some point I may expand it to include other metabolic pathways as well. 
 
 
 ## License
