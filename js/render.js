@@ -1,7 +1,7 @@
 export function resetETCState(ctx) {
   const { el, ui, state: cellState, strings, runtime } = ctx;
   const { setElementActive, isVisible } = ui;
-  const { buttons, synthase, particles, paths, counters, cringBaseTransform } = el;
+  const { buttons, synthase, cmplx4, particles, paths, counters, cringBaseTransform } = el;
   const complex3Btn = buttons.III;
   const complex4Btn = buttons.IV;
   const complex5Btn = buttons.V;
@@ -63,7 +63,6 @@ export function resetETCState(ctx) {
   setElementActive(particles.cytCount, true);
   setElementActive(particles.cIprotons, false);
   setElementActive(particles.cIIprotons, false);
-  //setElementActive(paths.protontocI, false);
   [
     particles.cIVims1,
     particles.cIVims2,
@@ -89,25 +88,37 @@ export function resetETCState(ctx) {
   setElementActive(complex3Btn, false);
   setElementActive(complex4Btn, false);
   setElementActive(complex5Btn, false);
-  setElementActive(paths.protonstocIV, false);
-  setElementActive(paths.oxygentocIV, false);
-  setElementActive(paths.waterout, false);
-  setElementActive(particles.cIVoxygen, true);
-  setElementActive(particles.cIVprotons, true);
-  setElementActive(particles.cIVwater, true);
+  
   setElementActive(particles.cytcelec, false);
   setElementActive(synthase.cring1, false);
   setElementActive(synthase.cring2, false);
   setElementActive(synthase.synthaseims1, true);
   setElementActive(synthase.synthasemat1, false);
-  //stuff for cytochrome c oxidase
-  setElementActive(particles.cIVprotonsInside1, false);
-  setElementActive(particles.cIVprotonsInside2, false);
-  isVisible(particles.cIVoxygenInside1, false);
-  isVisible(particles.cIVoxygenInside2, false);
-  isVisible(particles.cIVdioxygenInside, false);
-  isVisible(particles.cIVhydroxyInside1, false);
-  isVisible(particles.cIVhydroxyInside2, false);
+ 
+
+  isVisible(cmplx4.iron_dioxygen, false);
+  isVisible(cmplx4.iron_oxygen2minus, false);
+  isVisible(cmplx4.iron_water, false);
+  isVisible(cmplx4.iron_hydroxide, false);
+  isVisible(cmplx4.Y_Ominus, false);
+  isVisible(cmplx4.Y_Oradical, false);
+  isVisible(cmplx4.copper_hydroxide, false);
+  isVisible(cmplx4.copper_water, false);
+
+  setElementActive(cmplx4.Y_OH, true);
+  isVisible(cmplx4.Y_OH, true);
+
+  setElementActive(cmplx4.O2in, false);
+  setElementActive(cmplx4.protonstocIV, false);
+  setElementActive(cmplx4.cIVoxygen, true);
+  setElementActive(cmplx4.h2o_out, false);
+  isVisible(cmplx4.iron_h2o_out, false);
+  isVisible(cmplx4.copper_h2o_out, false);
+  setElementActive(particles.cIVprotons, true);
+  setElementActive(particles.waterout, false);
+  isVisible(cmplx4.scission, false);
+  isVisible(cmplx4.YtoFe, false);
+  isVisible(cmplx4.YtoCu, false);
 
 
 

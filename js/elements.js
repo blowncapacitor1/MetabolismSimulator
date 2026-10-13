@@ -47,9 +47,7 @@ export function getETCElements(svgDoc) {
     c1NAD: svgDoc.getElementById('cINAD'),
     c2Succinate: svgDoc.getElementById('cIISuccinate'),
     c2Fumarate: svgDoc.getElementById('cIIFumarate'),
-    cIVoxygen: svgDoc.getElementById('cIVoxygen'),
     cIVwater: svgDoc.getElementById('cIVwater'),
-    cIVprotons: svgDoc.getElementById('cIVprotons'),
     c1Electrons: [
       svgDoc.getElementById('cIelec1'),
       svgDoc.getElementById('cIelec2'),
@@ -90,16 +88,7 @@ export function getETCElements(svgDoc) {
     QH2membrane: svgDoc.getElementById('QH2'),
     Qmembrane: svgDoc.getElementById('Q'),
     cIinput: svgDoc.getElementById('cIinput'),
-    //stuff for cytochrome c oxidase
-    cIVprotonsInside1: svgDoc.getElementById('cIVprotonsInside1'),
-    cIVprotonsInside2: svgDoc.getElementById('cIVprotonsInside2'),
-    cIVhydroxyInside1: svgDoc.getElementById('cIVhydroxyInside1'),
-    cIVhydroxyInside2: svgDoc.getElementById('cIVhydroxyInside2'),
-    cIVdioxygenInside: svgDoc.getElementById('cIVdioxygenInside'),
-    cIVoxygenInside1: svgDoc.getElementById('cIVoxygenInside1'),
-    cIVoxygenInside2: svgDoc.getElementById('cIVoxygenInside2'),
-    cIVelec1: svgDoc.getElementById('cIVelec1'),
-    cIVelec2: svgDoc.getElementById('cIVelec2'),
+ 
     
   };
 
@@ -119,10 +108,39 @@ export function getETCElements(svgDoc) {
     QradicaltoQH2: svgDoc.getElementById('QradicaltoQH2'),
     QH2protonsOUT: svgDoc.getElementById('QH2protonsOUT'),
     QH2tocomplex3: svgDoc.getElementById('QH2toc3'),
-    protonstocIV: svgDoc.getElementById('protonstocIV'),
     oxygentocIV: svgDoc.getElementById('oxygentocIV'),
+  };
+
+  const cmplx4 = {
+        cIVprotons: svgDoc.getElementById('cIVprotons'),
     waterout: svgDoc.getElementById('waterout'),
+
+    cIVmat1: svgDoc.getElementById('cIVmat1'),
+    cIVmat2: svgDoc.getElementById('cIVmat2'),
+    cIVmat3: svgDoc.getElementById('cIVmat3'),
+    cIVmat4: svgDoc.getElementById('cIVmat4'),
+    cIVims1: svgDoc.getElementById('cIVims1'),
+    cIVims2: svgDoc.getElementById('cIVims2'),
+    cIVims3: svgDoc.getElementById('cIVims3'),
+    cIVims4: svgDoc.getElementById('cIVims4'),
+    iron_dioxygen: svgDoc.getElementById('iron_dioxygen'),
+    iron_oxygen2minus: svgDoc.getElementById('iron_oxygen2-'),
+    iron_water: svgDoc.getElementById('iron_water'),
+    iron_hydroxide: svgDoc.getElementById('iron_hydroxide'),
+    Y_OH: svgDoc.getElementById('Y_OH'),
+    Y_Ominus: svgDoc.getElementById('Y_O-'),
+    Y_Oradical: svgDoc.getElementById('Y_Oradical'),
+    copper_hydroxide: svgDoc.getElementById('copper_hydroxide'),
+    copper_water: svgDoc.getElementById('copper_water'),
+    YtoFe: svgDoc.getElementById('YtoFe'),
+    YtoCu: svgDoc.getElementById('YtoCu'),
+    O2in: svgDoc.getElementById('O2in'),
     protonstocIV: svgDoc.getElementById('protonstocIV'),
+    cIVoxygen: svgDoc.getElementById('cIVoxygen'),
+    h2o_out: svgDoc.getElementById('h2o_out'),
+    iron_h2o_out: svgDoc.getElementById('iron_h2o_out'),
+    copper_h2o_out: svgDoc.getElementById('copper_h2o_out'),
+    scission: svgDoc.getElementById('scission'),
   };
 
   const counters = {
@@ -132,5 +150,5 @@ export function getETCElements(svgDoc) {
     cytC: svgDoc.getElementById('cytCcounter'),
   };
 
-  return { buttons, synthase, particles, paths, counters, cringBaseTransform };
+  return { buttons, synthase, particles, paths, cmplx4, counters, cringBaseTransform };
 }
